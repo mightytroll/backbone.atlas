@@ -11,6 +11,8 @@ export const Model = Backbone.Model.extend({
 
     filters: {},
 
+    parsers: {},
+
     /**
      * Override the default `initialize` to support nested models by default.
      * If overriding this method, make sure you always call BaseModel.prototype.initialize.apply(this, options) first.
@@ -88,5 +90,34 @@ export const Model = Backbone.Model.extend({
         _.extend(options.data, this.filters);
 
         return Backbone.Model.prototype.fetch.call(this, options);
+    },
+
+    /**
+     * Parse response from server and convert it into models and collections in a declarative way.
+     *
+     * @param {Object} response
+     * @param {Object} options
+     * @return {Object}
+     */
+    parse(response, options) {
+        const parse = (result, parser, attribute) => {
+            if (_.isUndefined(response[attribute])) {
+                return result;
+            }
+
+            if (!_.isFunction(parser)) {
+                throw new Error('Type for field "' + attribute + '" cannot be instantiated!');
+            }
+
+            if (parser.extend === Model.extend) {
+                result[attribute] = new parser(response[attribute], { ...options, parent: this });
+            } else {
+                result[attribute] = parser.call(this, response[attribute]);
+            }
+
+            return result;
+        };
+
+        return _.assign({}, response, _.reduce(this.parsers, parse, {}));
     }
 });
