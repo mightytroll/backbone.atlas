@@ -121,7 +121,7 @@ describe("Model", () => {
         });
 
         it("should include filters", () => {
-            let testModel = new TestModel({ id: 1 }, { filters: { f: 1 }});
+            let testModel = new TestModel({ id: 1 }, { filters: { f: 1 } });
             testModel.fetch({
                 beforeSend: (jqXHR, settings) => {
                     expect(settings.url).toBe("/testModel/1?f=1");
@@ -146,6 +146,59 @@ describe("Model", () => {
                     return false;
                 }
             });
+        });
+    });
+
+    describe("parse()", () => {
+        const FooModel = Model.extend({});
+        const BarModel = Model.extend({});
+
+        const ParentModel = Model.extend({
+            parsers: {
+                foo: FooModel,
+                bar: function(value) {
+                    return new BarModel(value, { parent: this });
+                },
+                invalid: {}
+            }
+        });
+
+        test("should parse response attribute using provided model", () => {
+            let parent = new ParentModel({ id: "parent-1" });
+            let response = parent.parse({ foo: { id: "foo-1" } });
+
+            expect(response.foo).toBeInstanceOf(FooModel);
+            expect(response.foo.parent).toBe(parent);
+        });
+
+        test("should parse response attribute using provided function", () => {
+            let parent = new ParentModel({ id: "parent-1" });
+            let response = parent.parse({ bar: { id: "bar-1" } });
+
+            expect(response.bar).toBeInstanceOf(BarModel);
+            expect(response.bar.parent).toBe(parent);
+        });
+
+        test("should return new response object", () => {
+            let parent = new ParentModel({ id: "parent-1" });
+            let originalResponse = { bar: { id: "bar-1" } };
+            let response = parent.parse(originalResponse);
+
+            expect(originalResponse).not.toBe(response);
+        });
+
+        test("should not instantiate missing attributes", () => {
+            let parent = new ParentModel({ id: "parent-1" });
+            let response = parent.parse({});
+
+            expect(response.foo).toBeUndefined();
+            expect(response.bar).toBeUndefined();
+        });
+
+        test("should throw when parser is not a function", () => {
+            let parent = new ParentModel({ id: "parent-1" });
+
+            expect(() => parent.parse({ invalid: { id: "invalid-1" } })).toThrowError('Type for field "invalid" cannot be instantiated!');
         });
     });
 });
