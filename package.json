@@ -1,0 +1,47 @@
+{
+    "name": "backbone.atlas",
+    "version": "0.1.0",
+    "description": "Extended Backbone.Model and Backbone.Collection",
+    "main": "dist/backbone.atlas.js",
+    "scripts": {
+        "test": "jest",
+        "test:watch": "jest --watchAll",
+        "build": "./node_modules/.bin/webpack",
+        "release": "./node_modules/.bin/np"
+    },
+    "author": {
+        "name": "Igor Stojadinovic",
+        "email": "mightytroll@gmail.com",
+        "url": "http://www.articodestudio.com"
+    },
+    "license": "MIT",
+    "files": [
+        "/dist"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/mightytroll/backbone.atlas.git"
+    },
+    "devDependencies": {
+        "babel-cli": "^6.26.0",
+        "babel-loader": "^7.1.5",
+        "babel-preset-env": "^1.7.0",
+        "backbone": "~1.3.3",
+        "clean-webpack-plugin": "^0.1.19",
+        "jest": "^23.6.0",
+        "jquery": "^3.3.1",
+        "np": "^3.0.4",
+        "prettier": "^1.14.3",
+        "underscore": "~1.8.3",
+        "webpack": "^4.20.1",
+        "webpack-cli": "^3.1.1"
+    },
+    "peerDependencies": {
+        "backbone": "~1.3.3",
+        "underscore": "~1.8.3"
+    },
+    "jest": {
+        "testRegex": "(/__tests__/.*|(\\.)(test|spec))\\.jsx?$",
+        "verbose": true
+    }
+}
