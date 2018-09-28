@@ -19,21 +19,11 @@ export const Model = Backbone.Model.extend({
      * @param {object} [options={}]
      */
     initialize(attributes, options = {}) {
-        _.defaults(options, {
-            baseUrl: null,
-            urlRoot: null,
-            headers: {},
-            parent: _.result(options.collection, "parent", null),
-            filters: {}
-        });
-
         this.baseUrl = options.baseUrl || this.baseUrl;
         this.urlRoot = options.urlRoot || this.urlRoot;
-        this.headers = _.clone(this.headers);
-        _.assign(this.headers, options.headers);
-        this.parent = options.parent;
-        this.filters = _.clone(this.filters);
-        _.assign(this.filters, options.filters);
+        this.headers = _.assign(_.clone(this.headers), options.headers || {});
+        this.parent = options.parent || _.result(options.collection, "parent", null);
+        this.filters = _.assign(_.clone(this.filters), options.filters || {});
     },
 
     /**
@@ -88,5 +78,21 @@ export const Model = Backbone.Model.extend({
         _.extend(options.data, this.filters);
 
         return Backbone.Model.prototype.fetch.call(this, options);
+    },
+
+    parse(response, options = {}) {
+        if (!response) return response;
+
+        return _.map(response, (value, key) => {
+            if (this.constructor.parsers && this.constructor.parsers[key]) {
+                return this.constructor.parsers[key](value, options, this);
+            }
+
+            return this.constructor.parse(value, options, this, key);
+        });
+    }
+}, {
+    parse(value, options, model, attribute) {
+        return value;
     }
 });

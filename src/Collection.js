@@ -16,13 +16,8 @@ export const Collection = Backbone.Collection.extend({
      * @param options
      */
     initialize(models = null, options = {}) {
-        Backbone.Collection.prototype.initialize.call(this, models, options);
-
         this.parent = options.parent || null;
-
-        // Allow extended classes to specify different default filters
-        this.filters = _.clone(this.filters);
-        _.assign(this.filters, options.filters);
+        this.filters = _.assign(_.clone(this.filters), options.filters);
     },
 
     /**

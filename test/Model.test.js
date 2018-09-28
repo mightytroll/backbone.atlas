@@ -148,4 +148,33 @@ describe("Model", () => {
             });
         });
     });
+
+    describe("parse()", () => {
+        const TestModel = Model.extend(null, {
+            parsers: {
+                a() {}
+            }
+        });
+
+        it("should call attribute parser for defined attribute", () => {
+            const attributeParser = jest.spyOn(TestModel.parsers, "a");
+
+            let testModel = new TestModel({ a: "A", b: "B" }, { parse: true });
+
+            expect(attributeParser).toHaveBeenCalledWith("A", { parse: true }, testModel);
+
+            attributeParser.mockRestore();
+        });
+
+        it("should call default parser for undefined attribute", () => {
+            const defaultParser = jest.spyOn(TestModel, "parse");
+
+            let testModel = new TestModel({ a: "A", b: "B" }, { parse: true });
+
+            expect(defaultParser).toHaveBeenCalledWith("B", { parse: true }, testModel, "b");
+
+            defaultParser.mockRestore();
+        });
+
+    });
 });
