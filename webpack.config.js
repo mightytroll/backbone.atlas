@@ -1,13 +1,14 @@
 let path = require("path");
 let CleanWebpackPlugin = require('clean-webpack-plugin');
 
-const application = require('./package.json');
-
 module.exports = {
-    mode: "development",
+    mode: "production",
+    devtool: "source-map",
 
     context: path.resolve(__dirname, "src"),
-    entry: './index.js',
+    entry: {
+        "backbone.atlas": "./index.js"
+    },
 
     module: {
         rules: [{
@@ -27,11 +28,12 @@ module.exports = {
     ],
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: `${application.name}.js`,
+        filename: "[name].js",
         library: "Atlas",
-        libraryTarget: 'umd',
-        publicPath: '/dist/',
-        umdNamedDefine: true
+        libraryTarget: "umd",
+        publicPath: "/dist/",
+        umdNamedDefine: true,
+        globalObject: `typeof self !== "undefined" ? self : this`,
     },
     externals: {
         "backbone": {
