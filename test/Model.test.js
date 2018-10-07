@@ -152,8 +152,14 @@ describe("Model", () => {
     describe("parse()", () => {
         const TestModel = Model.extend(null, {
             parsers: {
-                a() {}
+                a(val) { return val; }
             }
+        });
+
+        it("should assign model attributes and preserve keys", () => {
+            let model = new Model({ a: "A", b: "B" }, { parse: true });
+
+            expect(model.attributes).toEqual({ a: "A", b: "B" });
         });
 
         it("should call attribute parser for defined attribute", () => {
@@ -175,6 +181,5 @@ describe("Model", () => {
 
             defaultParser.mockRestore();
         });
-
     });
 });

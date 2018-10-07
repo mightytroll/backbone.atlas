@@ -83,8 +83,8 @@ export const Model = Backbone.Model.extend({
     parse(response, options = {}) {
         if (!response) return response;
 
-        return _.map(response, (value, key) => {
-            if (this.constructor.parsers && this.constructor.parsers[key]) {
+        return _.mapObject(response, (value, key) => {
+            if (this.constructor.parsers && _.isFunction(this.constructor.parsers[key])) {
                 return this.constructor.parsers[key](value, options, this);
             }
 
