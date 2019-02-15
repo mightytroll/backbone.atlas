@@ -26,22 +26,25 @@
         "babel-cli": "^6.26.0",
         "babel-loader": "^7.1.5",
         "babel-preset-env": "^1.7.0",
-        "backbone": "~1.3.3",
+        "backbone": "^1.3.3",
         "clean-webpack-plugin": "^0.1.19",
         "jest": "^23.6.0",
         "jquery": "^3.3.1",
-        "np": "^3.0.4",
-        "prettier": "^1.14.3",
-        "underscore": "~1.8.3",
-        "webpack": "^4.20.1",
-        "webpack-cli": "^3.1.1"
+        "np": "^3.1.0",
+        "prettier": "^1.16.4",
+        "underscore": "^1.8.3",
+        "webpack": "^4.29.3",
+        "webpack-cli": "^3.2.3"
     },
     "peerDependencies": {
-        "backbone": "~1.3.3",
-        "underscore": "~1.8.3"
+        "backbone": "^1.3.3",
+        "underscore": "^1.8.3"
     },
     "jest": {
         "testRegex": "(/__tests__/.*|(\\.)(test|spec))\\.jsx?$",
         "verbose": true
+    },
+    "dependencies": {
+        "acorn": "^6.1.0"
     }
 }
