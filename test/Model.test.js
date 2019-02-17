@@ -156,6 +156,32 @@ describe("Model", () => {
             }
         });
 
+        it("should call attribute parser with model as context", () => {
+            let parserContext = null;
+            const TestParseContextModel = Model.extend(null, {
+                parsers: {
+                    a(value, options, model) {
+                        parserContext = this;
+                        return value;
+                    }
+                }
+            });
+            let model = new TestParseContextModel({ a: "A", b: "B" }, { parse: true });
+            expect(parserContext).toBe(model);
+        });
+
+        it("should call default parser with model as context", () => {
+            let parserContext = null;
+            const TestParseContextModel = Model.extend(null, {
+                parse(value, options, model, attribute) {
+                    parserContext = this;
+                    return value;
+                }
+            });
+            let model = new TestParseContextModel({ a: "A", b: "B" }, { parse: true });
+            expect(parserContext).toBe(model);
+        });
+
         it("should assign model attributes and preserve keys", () => {
             let model = new Model({ a: "A", b: "B" }, { parse: true });
 
