@@ -11,6 +11,7 @@ easier manipulation of nested resources, filters and custom headers.
   - [ Import ](#example-import-module)
   - [ Extending ](#example-extending)
   - [ Overriding Initialize ](#example-overriding-initialize)
+  - [ Polymorphic Collections ](#example-polymorphic-collections)
 - [ Features ](#features)
   - [ Nesting Resources ](#nesting-resources)
   - [ Filters ](#filters)
@@ -34,6 +35,7 @@ import Atlas from "backbone.atlas";
 To use all _Atlas_ features, application models and collections must extend _Atlas_' instead of _Backbone_'s.
 
 #### Example: Extending
+
 ```javascript
 const ExampleModel = Atlas.Model.extend(protoProps);
 const ExampleCollection = Atlas.Collection.extend(protoProps);
@@ -45,6 +47,7 @@ super `initialize` must be called.
 #### Example: Overriding Initialize
 
 ```javascript
+
 const ExampleModel = Atlas.Model.extend({
   initialize(attributes, options) {
     Atlas.Model.prototype.initialize.call(this, attributes, options);
@@ -54,11 +57,34 @@ const ExampleModel = Atlas.Model.extend({
 });
 ```
 
+#### Example: Polymorphic Collections
+
+```javascript
+const ExampleCollection = Collection.extend({
+  baseModel: User,
+
+  model(attributes, options) {
+    switch (attributes.type) {
+      case "1":
+        return new Seller(attributes, options);
+
+      case "2":
+        return new Traveler(attributes, options);
+
+      default:
+        return new this.baseModel(attributes, options);
+    }
+  }
+});
+```
+
+**NOTE:** Collection's `url()` and `sync()` methods check `model.prototype` to determine `urlRoot` and `headers`. Specify `baseModel` for polymorphic collections.
+
 ## Features
 
 ### Nesting Resources
 
-Resources are nested by specifying `parent` option when instantiating model ot collection. 
+Resources are nested by specifying `parent` option when instantiating model ot collection.
 
 #### Example: User Preferences
 

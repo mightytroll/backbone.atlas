@@ -135,4 +135,47 @@ describe("Collection", () => {
             });
         });
     });
+
+    describe("model()", () => {
+        const BaseModel = Model.extend({
+            baseUrl: "http://localhost",
+            urlRoot: "/base-model"
+        });
+
+        const ExtendedModel = BaseModel.extend({
+            urlRoot: "/extended-model"
+        });
+
+        const TestCollection = Collection.extend({
+            baseModel: BaseModel,
+
+            model(attributes, options) {
+                switch (attributes.type) {
+                    case "base":
+                        return new BaseModel(attributes, options);
+
+                    case "extended":
+                        return new ExtendedModel(attributes, options);
+
+                    default:
+                        return new this.baseModel(attributes, options);
+                }
+            }
+        });
+
+        it("should support polymorphic models", () => {
+            let testCollection = new TestCollection([{
+                type: "base",
+                id: "a"
+            }, {
+                type: "extended",
+                id: "b"
+            }]);
+
+            expect(testCollection.url()).toBe("/base-model");
+
+            expect(testCollection.get("a")).toBeInstanceOf(BaseModel);
+            expect(testCollection.get("b")).toBeInstanceOf(ExtendedModel);
+        });
+    });
 });

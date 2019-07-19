@@ -2,6 +2,7 @@ import _ from "underscore";
 import Backbone from "backbone";
 
 export const Collection = Backbone.Collection.extend({
+    baseModel: null,
     model: null,
 
     parent: null,
@@ -26,19 +27,22 @@ export const Collection = Backbone.Collection.extend({
      * @returns {string}
      */
     url() {
+        let modelClass = this.baseModel || this.model;
+
         const base = this.parent ? this.parent.url() : "";
-        const urlRoot = this.urlRoot ? this.urlRoot : this.model.prototype.urlRoot;
+        const urlRoot = this.urlRoot ? this.urlRoot : modelClass.prototype.urlRoot;
 
         return base + urlRoot;
     },
 
     sync(method, model, options) {
+        let modelClass = this.baseModel || this.model;
         let beforeSend = options.beforeSend;
         options.beforeSend = (jqXHR, settings) => {
-            settings.url = (this.model.prototype.baseUrl ? this.model.prototype.baseUrl : "") + settings.url;
+            settings.url = (modelClass.prototype.baseUrl ? modelClass.prototype.baseUrl : "") + settings.url;
             settings.crossDomain = true;
 
-            _.each(this.model.prototype.headers, (value, header) => {
+            _.each(modelClass.prototype.headers, (value, header) => {
                 jqXHR.setRequestHeader(header, value);
             });
 
