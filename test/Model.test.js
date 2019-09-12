@@ -188,17 +188,17 @@ describe("Model", () => {
             expect(model.attributes).toEqual({ a: "A", b: "B" });
         });
 
-        it("should call attribute parser for defined attribute", () => {
+        it("should call attribute parser if it exists", () => {
             const attributeParser = jest.spyOn(TestModel.parsers, "a");
 
             let testModel = new TestModel({ a: "A", b: "B" }, { parse: true });
 
-            expect(attributeParser).toHaveBeenCalledWith("A", { parse: true }, testModel);
+            expect(attributeParser).toHaveBeenCalledWith("A", { parse: true }, testModel, "a");
 
             attributeParser.mockRestore();
         });
 
-        it("should call default parser for undefined attribute", () => {
+        it("should call default parser if attribute parser does not exist", () => {
             const defaultParser = jest.spyOn(TestModel, "parse");
 
             let testModel = new TestModel({ a: "A", b: "B" }, { parse: true });
