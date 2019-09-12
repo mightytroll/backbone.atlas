@@ -7,7 +7,7 @@
         "test": "jest",
         "test:watch": "jest --watchAll",
         "build": "./node_modules/.bin/webpack",
-        "release": "npm run build && ./node_modules/.bin/np"
+        "release": "./node_modules/.bin/np"
     },
     "author": {
         "name": "Igor Stojadinovic",
