@@ -10,13 +10,13 @@ export const Collection = Backbone.Collection.extend({
     filters: {},
 
     /**
-     * Override the default `initialize` to support nested models by default.
-     * If overriding this method, make sure you always call BaseModel.prototype.initialize.apply(this, options) first.
+     * Override the default `preinitialize` to support nested models, custom headers, and filters.
+     * If overriding this method, make sure you always call Collection.prototype.preinitialize.apply(this, arguments) first.
      *
      * @param models
      * @param options
      */
-    initialize(models = null, options = {}) {
+    preinitialize(models = null, options = {}) {
         this.parent = options.parent || null;
         this.filters = _.assign(_.clone(this.filters), options.filters);
     },

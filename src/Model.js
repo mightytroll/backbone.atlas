@@ -12,13 +12,13 @@ export const Model = Backbone.Model.extend({
     filters: {},
 
     /**
-     * Override the default `initialize` to support nested models by default.
-     * If overriding this method, make sure you always call BaseModel.prototype.initialize.apply(this, options) first.
+     * Override the default `preinitialize` to support nested models, custom headers, and filters.
+     * If overriding this method, make sure you always call Model.prototype.preinitialize.apply(this, arguments) first.
      *
      * @param {object} attributes
      * @param {object} [options={}]
      */
-    initialize(attributes, options = {}) {
+    preinitialize(attributes, options = {}) {
         this.baseUrl = options.baseUrl || this.baseUrl;
         this.urlRoot = options.urlRoot || this.urlRoot;
         this.headers = _.assign(_.clone(this.headers), options.headers || {});
